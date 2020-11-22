@@ -1,9 +1,11 @@
-from Chess.Game import Game
+from Chess.Board import Board
 from Chess.Pieces import *
+from Chess.helperFunctions import *
+from Chess.Game import Game
 import math
 
 
-def minimax(position: Game, depth: int, alpha: int, beta: int, maximisingPlayer: bool):
+def minimax(position: Board, depth: int, alpha: int, beta: int, maximisingPlayer: bool):
     if depth == 0 or position.isGameOver():
         return position.eval()
 
@@ -27,8 +29,8 @@ def minimax(position: Game, depth: int, alpha: int, beta: int, maximisingPlayer:
         return minEval
 
 
-def main():
-    b = Game()
+def main1():
+    b = Board()
     # minimax(b, 3, -math.inf, math.inf, True)  # for white
     color = WHITE
     while(True):
@@ -38,8 +40,8 @@ def main():
         if(i == "exit"):
             break
         f, to = i.split()
-        f = b.parsePositon(f)
-        to = b.parsePositon(to)
+        f = parsePositon(f)
+        to = parsePositon(to)
         piece = b.getPiece(*f)
         if piece is None:
             print("No piece there")
@@ -57,6 +59,11 @@ def main():
                 color = BLACK
         else:
             print("Invalid move")
+
+
+def main():
+    game = Game()
+    game.startGame()
 
 
 if __name__ == "__main__":
