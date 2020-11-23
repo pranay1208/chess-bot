@@ -31,7 +31,8 @@ class Game:
 
     def isValidMove(self, startPos, endPos, piece: Piece, isWhiteMove):
         colorOfOpponent = BLACK if isWhiteMove else WHITE
-        if not piece.isValid(startPos, endPos, WHITE, self.board):
+        myColour = WHITE if isWhiteMove else BLACK
+        if not piece.isValid(startPos, endPos, myColour, self.board):
             return False
         boardAfterMove = Board(self.gameBoard)
         boardAfterMove.movePiece(startPos, endPos, piece)
@@ -47,8 +48,14 @@ class Game:
                 if piece is None or piece.Color != color:
                     continue
                 currentPosition = (x, y)
-                movesForThisPiece = [Move(currentPosition, endPos, piece) for endPos in piece.availableMoves(
-                    *currentPosition, self.board) if self.isValidMove(currentPosition, endPos, piece, color == WHITE)]
+                movesForThisPiece = []
+                for endPos in piece.availableMoves(x, y, self.board):
+                    if not self.isValidMove(currentPosition, endPos, piece, color == WHITE):
+                        continue
+                    movesForThisPiece.append(
+                        Move(currentPosition, endPos, piece))
+                # movesForThisPiece = [Move(currentPosition, endPos, piece) for endPos in piece.availableMoves(
+                #     *currentPosition, self.board) if self.isValidMove(currentPosition, endPos, piece, color == WHITE)]
                 allValidMoves.extend(movesForThisPiece)
         return allValidMoves
 
