@@ -3,6 +3,10 @@ from .Board import Board
 from .Pieces import *
 from .helperFunctions import *
 
+CHECKMATE = "checkmate"
+STALEMATE = "stalemate"
+GAME = "game"
+
 
 class Move:
     def __init__(self, start, end, piece):
@@ -10,44 +14,20 @@ class Move:
         self.endPosition = end
         self.piece = piece
 
+    def __str__(self) -> str:
+        return f'{coordToPosition(self.startPosition)} {coordToPosition(self.endPosition)}'
+
 
 class Game:
-    def __init__(self):
+    def __init__(self, board=None):
+        if board is not None:
+            self.board = board
+            self.gameBoard = self.board.gameboard
+            return
         self.board = Board()
         self.gameBoard = self.board.gameboard
         print("Please type the location of the piece, and then the destination to play a move. Type \"Resign\" to forfeit the game")
         print("Example - \"e2 e4\"")
-
-    def startGame(self):
-        playerMoveWhite = True
-        while(True):
-            print(self.board)
-            if not playerMoveWhite:
-                # TODO: AI moves
-                print("Black moves")
-            else:
-                userMove = input()
-                if userMove == "Resign":
-                    break
-                start, end = userMove.split()
-                start = parsePositon(start)
-                end = parsePositon(end)
-                piece = self.board.getPiece(*start)
-                if piece is None:
-                    print("No piece exists there")
-                    continue
-                if piece.Color != WHITE:
-                    print("That piece is not yours")
-                    continue
-                if not self.isValidMove(start, end, piece, True):
-                    print("Invalid move")
-                    continue
-                self.board.movePiece(start, end, piece)
-
-            if self.isGameOver(playerMoveWhite):
-                break
-            playerMoveWhite = not playerMoveWhite
-            print()
 
     def isValidMove(self, startPos, endPos, piece: Piece, isWhiteMove):
         colorOfOpponent = BLACK if isWhiteMove else WHITE
@@ -72,17 +52,15 @@ class Game:
                 allValidMoves.extend(movesForThisPiece)
         return allValidMoves
 
-    def isGameOver(self, isWhiteChance):
+    def gameStatus(self, isWhiteChance):
         myColour = WHITE if isWhiteChance else BLACK
         oppositeColor = BLACK if isWhiteChance else WHITE
         allValidMoves = self.getAllValidMoves(oppositeColor)
         if len(allValidMoves) > 0:
-            return False
+            return GAME
         print("\n")
         print(self.board)
         if self.board.isChecked(myColour):
-            print("CHECKMATE", myColour, "wins")
+            return CHECKMATE
         else:
-            print("STALEMATE: DRAW")
-        print("\n")
-        return True
+            return STALEMATE

@@ -1,7 +1,8 @@
 from Chess.Board import Board
 from Chess.Pieces import *
 from Chess.helperFunctions import *
-from Chess.Game import Game
+from Chess.Game import *
+from Chess.Engine import *
 import math
 
 
@@ -63,7 +64,51 @@ def main1():
 
 def main():
     game = Game()
-    game.startGame()
+    startGame(game)
+
+
+def startGame(game: Game):
+    playerMoveWhite = True
+    while(True):
+        print(game.board)
+        if not playerMoveWhite:
+            # TODO: AI moves
+            engine = Engine()
+            move = engine.getBestMove(game.board, False)
+            game.board.movePiece(move.startPosition,
+                                 move.endPosition, move.piece)
+            print("Black moves", move)
+        else:
+            userMove = input()
+            if userMove == "Resign":
+                break
+            start, end = userMove.split()
+            start = parsePositon(start)
+            end = parsePositon(end)
+            piece = game.board.getPiece(*start)
+            if piece is None:
+                print("No piece exists there")
+                continue
+            if piece.Color != WHITE:
+                print("That piece is not yours")
+                continue
+            if not game.isValidMove(start, end, piece, True):
+                print("Invalid move")
+                continue
+            game.board.movePiece(start, end, piece)
+
+        gs = game.gameStatus(playerMoveWhite)
+        if gs == GAME:
+            playerMoveWhite = not playerMoveWhite
+            print()
+        elif gs == CHECKMATE:
+            print("CHECKMATE", "WHITE" if playerMoveWhite else "BLACK", "wins")
+            break
+        else:
+            print("STALEMATE game draw")
+            break
+    # e, a = Engine().minimax(Board(), 4, -math.inf, math.inf, False)
+    # print(e, a)
 
 
 if __name__ == "__main__":
