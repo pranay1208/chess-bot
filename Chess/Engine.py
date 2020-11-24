@@ -7,21 +7,6 @@ from .helperFunctions import *
 class Engine:
     DEPTH = 3
 
-    def getBestMove(self, board: Board, isWhiteMove):
-        g = Game(board)
-        bestMoveEval = -10000 if isWhiteMove else 10000
-        bestMoveFound = None
-        for move in g.getAllValidMoves(WHITE if isWhiteMove else BLACK):
-            boardAfterMove = Board(board.gameboard)
-            boardAfterMove.movePiece(
-                move.startPosition, move.endPosition, move.piece)
-            value = - self.minimax(boardAfterMove, self.DEPTH -
-                                   1, -10001, 10001, not isWhiteMove)
-            if (isWhiteMove and value >= bestMoveEval) or (not isWhiteMove and value <= bestMoveEval):
-                bestMoveEval = value
-                bestMoveFound = move
-        return bestMoveFound
-
     def selectmove(self, board: Board, isWhiteMove):
         bestMove = None
         bestValue = -9999
@@ -59,42 +44,6 @@ class Engine:
             if(score > alpha):
                 alpha = score
         return bestscore
-
-    def minimax(self, board: Board, depth: int, alpha: int, beta: int, maximizingPlayer: bool):
-        if depth == 0:
-            return - self.evaluation(board, maximizingPlayer)
-        g = Game(board)
-        # gameStatus = g.gameStatus(not maximizingPlayer)
-        # if gameStatus == CHECKMATE:
-        #     return (-10000 if maximizingPlayer else 10000), None
-        # if gameStatus == STALEMATE:
-        #     return 0, None
-
-        if maximizingPlayer:
-            maxEval = -10000
-            for move in g.getAllValidMoves(WHITE):
-                boardAfterMove = Board(board.gameboard)
-                boardAfterMove.movePiece(
-                    move.startPosition, move.endPosition, move.piece)
-                maxEval = max(maxEval, self.minimax(
-                    boardAfterMove, depth-1, alpha, beta, not maximizingPlayer))
-                alpha = max(alpha, maxEval)
-                if beta <= alpha:
-                    break
-            return maxEval
-
-        else:
-            minEval = 10000
-            for move in g.getAllValidMoves(BLACK):
-                boardAfterMove = Board(board.gameboard)
-                boardAfterMove.movePiece(
-                    move.startPosition, move.endPosition, move.piece)
-                minEval = min(minEval, self.minimax(
-                    boardAfterMove, depth-1, alpha, beta, not maximizingPlayer))
-                beta = min(beta, minEval)
-                if beta <= alpha:
-                    break
-            return minEval
 
     def evaluation(self, board: Board, isWhiteChance: bool):
         g = Game(board)
