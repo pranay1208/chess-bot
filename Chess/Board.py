@@ -50,6 +50,7 @@ class Board:
     def setPiece(self, x, y, piece):
         if type(piece) == Pawn and (y == 0 or y == 7):
             self.gameboard[y][x] = Queen(piece.Color)
+            return
         self.gameboard[y][x] = piece
 
     def movePiece(self, startPos, endPos, piece):
