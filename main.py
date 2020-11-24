@@ -36,12 +36,16 @@ def startGame(game: Game):
             print("Black moves", move)
         else:
             userMove = input()
-            if userMove == "Resign":
+            if userMove == "Resign" or userMove == "resign":
                 break
-            start, end = userMove.split()
-            start = parsePositon(start)
-            end = parsePositon(end)
-            piece = game.board.getPiece(*start)
+            try:
+                start, end = userMove.split()
+                start = parsePositon(start)
+                end = parsePositon(end)
+                piece = game.board.getPiece(*start)
+            except:
+                print("Invalid command")
+                continue
             if piece is None:
                 print("No piece exists there")
                 continue

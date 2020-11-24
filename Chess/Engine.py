@@ -110,6 +110,16 @@ class Engine:
                 if piece is None:
                     continue
                 evaluationScore += getPieceValue(piece)
-                evaluationScore += piece.posEval(x, y)
+                evaluationScore += piece.posEval(x, y)/10
+                if piece.max_possible_moves != 0:
+                    numFreeMoves = len(piece.availableMoves(x,  y, board))
+                    if numFreeMoves == 0:
+                        # if piece cannot move, it's value is halved
+                        evaluationScore -= getPieceValue(piece)/2
+                    else:
+                        numFreeMovesMultiplier = 1 if piece.Color == WHITE else -1
+                        pieceUtility = numFreeMoves / piece.max_possible_moves
+                        evaluationScore += (numFreeMovesMultiplier *
+                                            pieceUtility / 25)
 
         return evaluationScore

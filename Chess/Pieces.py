@@ -7,13 +7,14 @@ chessDiagonals = [(1, 1), (-1, 1), (1, -1), (-1, -1)]
 class Piece:
     def __init__(self, color=None):
         self.Color = color
+        self.max_possible_moves = 0
 
     def isValid(self, startpos, endpos, Color, board):
         if endpos in self.availableMoves(startpos[0], startpos[1], board, Color=Color):
             return True
         return False
 
-    def availableMoves(self, x, y, gameboard, Color=None):
+    def availableMoves(self, x, y, board, Color=None):
         print("ERROR: no movement for base class")
 
     def isInBounds(self, x, y):
@@ -53,6 +54,11 @@ class Piece:
 
 
 class Knight(Piece):
+
+    def __init__(self, color) -> None:
+        super().__init__(color)
+        self.max_possible_moves = 8
+
     def __str__(self) -> str:
         if self.Color == WHITE:
             return '♘'
@@ -73,7 +79,7 @@ class Knight(Piece):
         if Color == WHITE:
             return arr[y][x]
         else:
-            return (arr[::-1])[y][x]
+            return -(arr[::-1])[y][x]
 
     def availableMoves(self, x, y, board, Color=None):
         if Color is None:
@@ -86,6 +92,10 @@ class Knight(Piece):
 
 
 class Rook(Piece):
+    def __init__(self, color) -> None:
+        super().__init__(color)
+        self.max_possible_moves = 14
+
     def __str__(self) -> str:
         if self.Color == WHITE:
             return '♖'
@@ -96,17 +106,17 @@ class Rook(Piece):
             Color = self.Color
         arr = [
             [0,  0,  0,  5,  5,  0,  0,  0],
+            [5,  10,  10,  10,  10,  10, 10, 5],
             [-5,  0,  0,  0,  0,  0,  0, -5],
             [-5,  0,  0,  0,  0,  0,  0, -5],
             [-5,  0,  0,  0,  0,  0,  0, -5],
             [-5,  0,  0,  0,  0,  0,  0, -5],
-            [-5,  0,  0,  0,  0,  0,  0, -5],
-            [5, 10, 10, 10, 10, 10, 10,  5],
+            [-5, 0, 0, 0, 0, 0, 0,  -5],
             [0,  0,  0,  0,  0,  0,  0,  0]]
         if Color == WHITE:
             return arr[y][x]
         else:
-            return (arr[::-1])[y][x]
+            return -(arr[::-1])[y][x]
 
     def availableMoves(self, x, y, board, Color=None):
         if Color is None:
@@ -115,6 +125,10 @@ class Rook(Piece):
 
 
 class Bishop(Piece):
+    def __init__(self, color) -> None:
+        super().__init__(color)
+        self.max_possible_moves = 14
+
     def __str__(self) -> str:
         if self.Color == WHITE:
             return '♗'
@@ -127,15 +141,15 @@ class Bishop(Piece):
             [-20, -10, -10, -10, -10, -10, -10, -20],
             [-10,  5,  0,  0,  0,  0,  5, -10],
             [-10, 10, 10, 10, 10, 10, 10, -10],
-            [-10,  0, 10, 10, 10, 10,  0, -10],
-            [-10,  5,  5, 10, 10,  5,  5, -10],
+            [-10,  0, 12, 14, 14, 12,  0, -10],
+            [-10,  5,  6, 11, 11,  6,  5, -10],
             [-10,  0,  5, 10, 10,  5,  0, -10],
             [-10,  0,  0,  0,  0,  0,  0, -10],
             [-20, -10, -10, -10, -10, -10, -10, -20]]
         if Color == WHITE:
             return arr[y][x]
         else:
-            return (arr[::-1])[y][x]
+            return -(arr[::-1])[y][x]
 
     def availableMoves(self, x, y, board, Color=None):
         if Color is None:
@@ -144,6 +158,10 @@ class Bishop(Piece):
 
 
 class Queen(Piece):
+    def __init__(self, color) -> None:
+        super().__init__(color)
+        self.max_possible_moves = 20
+
     def __str__(self) -> str:
         if self.Color == WHITE:
             return '♕'
@@ -164,7 +182,7 @@ class Queen(Piece):
         if Color == WHITE:
             return arr[y][x]
         else:
-            return (arr[::-1])[y][x]
+            return -(arr[::-1])[y][x]
 
     def availableMoves(self, x, y, board, Color=None):
         if Color is None:
@@ -173,6 +191,9 @@ class Queen(Piece):
 
 
 class King(Piece):
+    def __init__(self, color) -> None:
+        super().__init__(color)
+
     def __str__(self) -> str:
         if self.Color == WHITE:
             return '♔'
@@ -193,7 +214,7 @@ class King(Piece):
         if Color == WHITE:
             return arr[y][x]
         else:
-            return (arr[::-1])[y][x]
+            return -(arr[::-1])[y][x]
 
     def availableMoves(self, x, y, board, Color=None):
         if Color is None:
@@ -205,6 +226,9 @@ class King(Piece):
 
 
 class Pawn(Piece):
+    def __init__(self, color) -> None:
+        super().__init__(color)
+
     def __str__(self) -> str:
         if self.Color == WHITE:
             return '♙'
@@ -214,18 +238,19 @@ class Pawn(Piece):
         if Color is None:
             Color = self.Color
         arr = [
-            [-50, -40, -30, -30, -30, -30, -40, -50],
-            [-40, -20,  0,  5,  5,  0, -20, -40],
-            [-30,  5, 10, 15, 15, 10,  5, -30],
-            [-30,  0, 15, 20, 20, 15,  0, -30],
-            [-30,  5, 15, 20, 20, 15,  5, -30],
-            [-30,  0, 10, 15, 15, 10,  0, -30],
-            [-40, -20,  0,  0,  0,  0, -20, -40],
-            [-50, -40, -30, -30, -30, -30, -40, -50]]
+            [0, 0, 0, 0, 0, 0, 0, 0],
+            [5, 10, 10, -10, -10, 10, 10, 5],
+            [5, -5, -10, 0, 0, -10, -5, 5],
+            [0, 0, 0, 20, 20, 0, 0, 0],
+            [5, 5, 10, 25, 25, 10, 5, 5],
+            [10, 10, 20, 30, 30, 20, 10, 10],
+            [50, 50, 50, 50, 50, 50, 50, 50],
+            [900, 900, 900, 900, 900, 900, 900, 900]
+        ]
         if Color == WHITE:
             return arr[y][x]
         else:
-            return (arr[::-1])[y][x]
+            return -(arr[::-1])[y][x]
 
     def __init__(self, Color) -> None:
         super().__init__(Color)
