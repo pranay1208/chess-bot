@@ -3,6 +3,7 @@ from Chess.Pieces import *
 from Chess.helperFunctions import *
 from Chess.Game import *
 from Chess.Engine import *
+import time
 
 
 def main():
@@ -27,13 +28,15 @@ def startGame(game: Game):
             print(game.board)
         if not playerMoveWhite:
             engine = Engine()
+            startTime = time.time()
             move = engine.selectmove(game.board, False)
             if move is None:
-                print("Black resigns.")
+                print("Black resigns")
                 break
             game.board.movePiece(move.startPosition,
                                  move.endPosition, move.piece)
-            print("Black moves", move)
+            print("Black moves", move, "taking",
+                  time.time()-startTime, "seconds")
         else:
             userMove = input()
             if userMove == "Resign" or userMove == "resign":
