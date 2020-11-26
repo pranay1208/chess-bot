@@ -30,6 +30,8 @@ class Engine:
         bestscore = -10000
         if(depthleft == 0):
             return self.evaluation(board, isWhiteMove)
+        if not self.kingOnBoard(board, WHITE if isWhiteMove else BLACK):
+            return bestscore
         game = Game(board)
         for move in game.getAllValidMoves(WHITE if isWhiteMove else BLACK):
             boardAfterMove = Board(board.gameboard)
@@ -44,6 +46,15 @@ class Engine:
             if(score > alpha):
                 alpha = score
         return bestscore
+
+    def kingOnBoard(self, board: Board, color):
+        gb = board.gameboard
+        for y in range(8):
+            for x in range(8):
+                p = board.getPiece(x, y)
+                if type(p) == King and p.Color == color:
+                    return True
+        return False
 
     def evaluation(self, board: Board, isWhiteChance: bool):
         g = Game(board)

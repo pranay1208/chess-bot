@@ -29,7 +29,7 @@ class Game:
         print("Please type the location of the piece, and then the destination to play a move. Type \"Resign\" to forfeit the game")
         print("Example - \"e2 e4\"")
 
-    def isValidMove(self, startPos, endPos, piece: Piece, isWhiteMove):
+    def isValidMove(self, startPos, endPos, piece: Piece, isWhiteMove, ):
         colorOfOpponent = BLACK if isWhiteMove else WHITE
         myColour = WHITE if isWhiteMove else BLACK
         if not piece.isValid(startPos, endPos, myColour, self.board):
@@ -50,7 +50,7 @@ class Game:
                 currentPosition = (x, y)
                 movesForThisPiece = []
                 for endPos in piece.availableMoves(x, y, self.board):
-                    if not self.isValidMove(currentPosition, endPos, piece, color == WHITE):
+                    if not piece.isValid(currentPosition, endPos, piece, self.board):
                         continue
                     movesForThisPiece.append(
                         Move(currentPosition, endPos, piece))

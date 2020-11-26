@@ -61,6 +61,9 @@ def startGame(game: Game):
             game.board.movePiece(start, end, piece)
 
         gs = game.gameStatus(playerMoveWhite)
+        if not Engine().kingOnBoard(game.board, WHITE if playerMoveWhite else BLACK):
+            print("King captured, ", "WHITE" if playerMoveWhite else "BLACK", "wins")
+            break
         if gs == GAME:
             playerMoveWhite = not playerMoveWhite
             print()

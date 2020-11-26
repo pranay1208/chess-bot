@@ -17,6 +17,7 @@ class Board:
                 for piece in row:
                     gameRow.append(piece)
                 self.gameboard.append(gameRow)
+        self.checkedKing = True
 
     def readyPosition(self):
         self.gameboard = [
