@@ -58,11 +58,6 @@ class Engine:
 
     def evaluation(self, board: Board, isWhiteChance: bool):
         g = Game(board)
-        gameStatus = g.gameStatus(isWhiteChance)
-        if gameStatus == STALEMATE:
-            return 0
-        if gameStatus == CHECKMATE:
-            return 10000 if isWhiteChance else -10000
         evaluationScore = 0
         for y in range(8):
             for x in range(8):

@@ -55,13 +55,14 @@ def startGame(game: Game):
             if piece.Color != WHITE:
                 print("That piece is not yours")
                 continue
-            if not game.isValidMove(start, end, piece, True):
+            if not piece.isValid(start, end, piece, game.board):
                 print("Invalid move")
                 continue
             game.board.movePiece(start, end, piece)
 
         gs = game.gameStatus(playerMoveWhite)
-        if not Engine().kingOnBoard(game.board, WHITE if playerMoveWhite else BLACK):
+        if not Engine().kingOnBoard(game.board, BLACK if playerMoveWhite else WHITE):
+            print(game.board)
             print("King captured, ", "WHITE" if playerMoveWhite else "BLACK", "wins")
             break
         if gs == GAME:
